@@ -4,9 +4,7 @@
           "id": "UCSBDiningCommonsMenuItem-1",
           "author": "JackLiu8",
           "preConditions": [
-            {
-              "onFail": "MARK_RAN"
-            },
+            { "onFail": "MARK_RAN" },
             {
               "not": [
                 {
@@ -20,16 +18,17 @@
           "changes": [
             {
               "createTable": {
+                "tableName": "UCSBDININGCOMMONSMENUITEM",
                 "columns": [
                   {
                     "column": {
+                      "name": "ID",
+                      "type": "BIGINT",
+                      "autoIncrement": true,
                       "constraints": {
                         "primaryKey": true,
                         "primaryKeyName": "DININGCOMMONSMENUITEM_PK"
-                      },
-                      "autoIncrement": true,
-                      "name": "ID",
-                      "type": "BIGINT"
+                      }
                     }
                   },
                   {
@@ -50,8 +49,7 @@
                       "type": "VARCHAR(255)"
                     }
                   }
-                ],
-                "tableName": "UCSBDININGCOMMONSMENUITEM"
+                ]
               }
             }
           ]
