@@ -27,15 +27,6 @@
                         "primaryKey": true,
                         "primaryKeyName": "UCSBOrganization_PK"
                       },
-                      "name": "CODE",
-                      "type": "VARCHAR(255)"
-                    }
-                  },
-                  {
-                    "column": {
-                      "constraints": {
-                        "nullable": false
-                      },
                       "name": "ORG_CODE",
                       "type": "VARCHAR(255)"
                     }
