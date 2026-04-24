@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s26/team01-s26-16
 owner: ucsb-cs156-s26
 repo_name: team01-s26-16
-pull_requests: [{"author":{"id":"U_kgDOCusDGg","is_bot":false,"login":"ikeacat2","name":"Ivy Holiday"},"headRefName":"issue_20","number":47,"title":"Issue 20: Create database table for RecommendationRequest","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/47"}]
+pull_requests: [{"author":{"id":"U_kgDOCuipXA","is_bot":false,"login":"nikitahuynh","name":""},"headRefName":"nh-UCSBOrganization-create-db","number":49,"title":"Nh ucsb organization create db","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/49"},{"author":{"id":"U_kgDOCusDGg","is_bot":false,"login":"ikeacat2","name":"Ivy Holiday"},"headRefName":"issue_20","number":47,"title":"Issue 20: Create database table for RecommendationRequest","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/47"}]
