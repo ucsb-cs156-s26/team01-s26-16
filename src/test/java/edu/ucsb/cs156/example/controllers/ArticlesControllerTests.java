@@ -225,7 +225,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
             .title("Handy Spring Utility Classes")
             .url("https://twitter.com/maciejwalkowiak/status/1511736828369719300")
             .explanation("A useful reference")
-            .email("phtcon@ucsb.edu")
+            .email("cgaucho@ucsb.edu")
             .dateAdded(ldt2)
             .build();
 
