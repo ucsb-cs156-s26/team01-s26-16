@@ -1,0 +1,74 @@
+{ "databaseChangeLog": [
+    {
+        "changeSet": {
+          "id": "UCSBOrganization",
+          "author": "nikitahuynh",
+          "preConditions": [
+            {
+              "onFail": "MARK_RAN"
+            },
+            {
+              "not": [
+                {
+                  "tableExists": {
+                    "tableName": "UCSBOrganization"
+                  }
+                }
+              ]
+            }
+          ],
+          "changes": [
+            {
+              "createTable": {
+                "columns": [
+                  {
+                    "column": {
+                      "constraints": {
+                        "primaryKey": true,
+                        "primaryKeyName": "UCSBOrganization_PK"
+                      },
+                      "name": "CODE",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "constraints": {
+                        "nullable": false
+                      },
+                      "name": "ORG_CODE",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "constraints": {
+                        "nullable": false
+                      },
+                      "name": "ORG_TRANSLATION_SHORT",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "constraints": {
+                        "nullable": false
+                      },
+                      "name": "ORG_TRANSLATION",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "INACTIVE",
+                      "type": "BOOLEAN"
+                    }
+                  }]
+                ,
+                "tableName": "UCSBOrganization"
+              }
+            }]
+
+        }
+    }
+]}
