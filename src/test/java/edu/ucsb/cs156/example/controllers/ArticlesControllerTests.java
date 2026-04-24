@@ -22,6 +22,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -200,5 +201,90 @@ public class ArticlesControllerTests extends ControllerTestCase {
     String expectedJson = mapper.writeValueAsString(article);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_an_existing_article() throws Exception {
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-04-20T00:00:00");
+    LocalDateTime ldt2 = LocalDateTime.parse("2023-04-20T00:00:00");
+
+    Articles articleOrig =
+        Articles.builder()
+            .title("Using testing-playground with React Testing Library")
+            .url(
+                "https://dev.to/katieraby/using-testing-playground-with-react-testing-library-26j7")
+            .explanation("Helpful when we get to front end development")
+            .email("phtcon@ucsb.edu")
+            .dateAdded(ldt1)
+            .build();
+
+    Articles articleEdited =
+        Articles.builder()
+            .title("Handy Spring Utility Classes")
+            .url("https://twitter.com/maciejwalkowiak/status/1511736828369719300")
+            .explanation("A useful reference")
+            .email("phtcon@ucsb.edu")
+            .dateAdded(ldt2)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(articleEdited);
+
+    when(articlesRepository.findById(eq(67L))).thenReturn(Optional.of(articleOrig));
+
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/Articles")
+                    .param("id", "67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verify(articlesRepository, times(1)).findById(67L);
+    verify(articlesRepository, times(1)).save(articleEdited);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_article_that_does_not_exist() throws Exception {
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-04-20T00:00:00");
+
+    Articles articleEdited =
+        Articles.builder()
+            .title("Using testing-playground with React Testing Library")
+            .url(
+                "https://dev.to/katieraby/using-testing-playground-with-react-testing-library-26j7")
+            .explanation("Helpful when we get to front end development")
+            .email("phtcon@ucsb.edu")
+            .dateAdded(ldt1)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(articleEdited);
+
+    when(articlesRepository.findById(eq(67L))).thenReturn(Optional.empty());
+
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/Articles")
+                    .param("id", "67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    verify(articlesRepository, times(1)).findById(67L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("Articles with id 67 not found", json.get("message"));
   }
 }
