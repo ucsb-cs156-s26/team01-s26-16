@@ -1,7 +1,8 @@
 package edu.ucsb.cs156.example.controllers;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import edu.ucsb.cs156.example.testconfig.TestConfig;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -114,35 +116,32 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
   public void an_admin_user_can_post_a_new_organization() throws Exception {
-    // arrange
 
-    UCSBOrganization csu =
-        UCSBOrganization.builder()
-            .orgCode("CSU")
-            .orgTranslationShort("CSU")
-            .orgTranslation("Chinese Student Union")
-            .inactive(false)
-            .build();
+    // Return the entity that the controller actually passes to save()
+    when(ucsbOrganizationRepository.save(any(UCSBOrganization.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
-    when(ucsbOrganizationRepository.save(eq(csu))).thenReturn(csu);
+    ArgumentCaptor<UCSBOrganization> captor = ArgumentCaptor.forClass(UCSBOrganization.class);
 
-    // act
-    MvcResult response =
-        mockMvc
-            .perform(
-                post("/api/UCSBOrganization/post")
-                    .param("orgCode", "CSU")
-                    .param("orgTranslationShort", "CSU")
-                    .param("orgTranslation", "Chinese Student Union")
-                    .param("inactive", "false")
-                    .with(csrf()))
-            .andExpect(status().isOk())
-            .andReturn();
+    // Use inactive=true (NOT the default false)
+    mockMvc
+        .perform(
+            post("/api/UCSBOrganization/post")
+                .param("orgCode", "CSU")
+                .param("orgTranslationShort", "CSU")
+                .param("orgTranslation", "Chinese Student Union")
+                .param("inactive", "true")
+                .with(csrf()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.orgCode").value("CSU"))
+        .andExpect(jsonPath("$.orgTranslationShort").value("CSU"))
+        .andExpect(jsonPath("$.orgTranslation").value("Chinese Student Union"))
+        .andExpect(jsonPath("$.inactive").value(true));
 
-    // assert
-    verify(ucsbOrganizationRepository, times(1)).save(csu);
-    String expectedJson = mapper.writeValueAsString(csu);
-    String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
+    verify(ucsbOrganizationRepository, times(1)).save(captor.capture());
+    UCSBOrganization savedArg = captor.getValue();
+
+    assertTrue(
+        savedArg.getInactive()); // If setInactive is removed, this becomes false -> test fails
   }
 }
