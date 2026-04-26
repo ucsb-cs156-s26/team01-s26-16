@@ -74,19 +74,19 @@ import org.springframework.web.bind.annotation.RestController;
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
 
-<span class="nc" id="L77">    log.info(&quot;dateRequested={}&quot;, dateRequested);</span>
+<span class="fc" id="L77">    log.info(&quot;dateRequested={}&quot;, dateRequested);</span>
 
-<span class="nc" id="L79">    RecommendationRequest recommendationRequest = new RecommendationRequest();</span>
-<span class="nc" id="L80">    recommendationRequest.setRequesterEmail(requesterEmail);</span>
-<span class="nc" id="L81">    recommendationRequest.setProfessorEmail(professorEmail);</span>
-<span class="nc" id="L82">    recommendationRequest.setExplanation(explanation);</span>
-<span class="nc" id="L83">    recommendationRequest.setDateRequested(dateRequested);</span>
-<span class="nc" id="L84">    recommendationRequest.setDateNeeded(dateNeeded);</span>
+<span class="fc" id="L79">    RecommendationRequest recommendationRequest = new RecommendationRequest();</span>
+<span class="fc" id="L80">    recommendationRequest.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L81">    recommendationRequest.setProfessorEmail(professorEmail);</span>
+<span class="fc" id="L82">    recommendationRequest.setExplanation(explanation);</span>
+<span class="fc" id="L83">    recommendationRequest.setDateRequested(dateRequested);</span>
+<span class="fc" id="L84">    recommendationRequest.setDateNeeded(dateNeeded);</span>
 
-<span class="nc" id="L86">    RecommendationRequest savedRecommendationRequest =</span>
-<span class="nc" id="L87">        recommendationRequestRepository.save(recommendationRequest);</span>
+<span class="fc" id="L86">    RecommendationRequest savedRecommendationRequest =</span>
+<span class="fc" id="L87">        recommendationRequestRepository.save(recommendationRequest);</span>
 
-<span class="nc" id="L89">    return savedRecommendationRequest;</span>
+<span class="fc" id="L89">    return savedRecommendationRequest;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
