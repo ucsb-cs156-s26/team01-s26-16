@@ -3,6 +3,7 @@ package edu.ucsb.cs156.example.controllers;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,8 @@ import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -143,5 +146,66 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
 
     assertTrue(
         savedArg.getInactive()); // If setInactive is removed, this becomes false -> test fails
+  }
+
+  @Test
+  public void logged_out_users_cannot_get_by_id() throws Exception {
+    mockMvc
+        .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
+        .andExpect(status().is(403)); // logged out users can't get by id
+  }
+
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
+
+    // arrange
+
+    UCSBOrganization org =
+        UCSBOrganization.builder()
+            .orgCode("tt")
+            .orgTranslationShort("TT")
+            .orgTranslation("Theta Tau")
+            .inactive(false)
+            .build();
+
+    when(ucsbOrganizationRepository.findById(eq("tt"))).thenReturn(Optional.of(org));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(get("/api/UCSBOrganization").param("orgCode", "tt"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+
+    verify(ucsbOrganizationRepository, times(1)).findById(eq("tt"));
+    String expectedJson = mapper.writeValueAsString(org);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void test_that_logged_in_user_can_get_by_id_when_the_id_does_not_exist() throws Exception {
+
+    // arrange
+
+    when(ucsbOrganizationRepository.findById(eq("123"))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+
+    verify(ucsbOrganizationRepository, times(1)).findById(eq("123"));
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("EntityNotFoundException", json.get("type"));
+    assertEquals("UCSBOrganization with id 123 not found", json.get("message"));
   }
 }
