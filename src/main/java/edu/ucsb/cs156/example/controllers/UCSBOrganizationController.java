@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.example.controllers;
 
 import edu.ucsb.cs156.example.entities.UCSBOrganization;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UCSBOrganizationController extends ApiController {
 
-  @Autowired UCSBOrganizationRepository UCSBOrganizationRepository;
+  @Autowired UCSBOrganizationRepository ucsbOrganizationRepository;
 
   /**
    * This method returns a list of all ucsborganizations.
@@ -32,7 +33,7 @@ public class UCSBOrganizationController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/all")
   public Iterable<UCSBOrganization> allOrganizations() {
-    Iterable<UCSBOrganization> organizations = UCSBOrganizationRepository.findAll();
+    Iterable<UCSBOrganization> organizations = ucsbOrganizationRepository.findAll();
     return organizations;
   }
 
@@ -59,8 +60,26 @@ public class UCSBOrganizationController extends ApiController {
     organization.setOrgTranslation(orgTranslation);
     organization.setInactive(inactive);
 
-    UCSBOrganization savedOrganization = UCSBOrganizationRepository.save(organization);
+    UCSBOrganization savedOrganization = ucsbOrganizationRepository.save(organization);
 
     return savedOrganization;
+  }
+
+  /**
+   * This method returns a single ucsborganization.
+   *
+   * @param orgCode code of the UCSBOrganization
+   * @return a single UCSBOrganization
+   */
+  @Operation(summary = "Get a single UCSBOrganization")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("")
+  public UCSBOrganization getById(@Parameter(name = "orgCode") @RequestParam String orgCode) {
+    UCSBOrganization org =
+        ucsbOrganizationRepository
+            .findById(orgCode)
+            .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, orgCode));
+
+    return org;
   }
 }
