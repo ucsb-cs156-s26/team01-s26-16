@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s26/team01-s26-16
 owner: ucsb-cs156-s26
 repo_name: team01-s26-16
-pull_requests: [{"author":{"id":"U_kgDOCu1aKQ","is_bot":false,"login":"RohilJainUCSB","name":""},"headRefName":"rj-HelpRequest-create-db","number":54,"title":"Added HelpRequest db entity and repository","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/54"}]
+pull_requests: [{"author":{"id":"U_kgDOCuipXA","is_bot":false,"login":"nikitahuynh","name":""},"headRefName":"nh-UCSBOrganization-get-by-id","number":55,"title":"Nh ucsb organization get by","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/55"},{"author":{"id":"U_kgDOCu1aKQ","is_bot":false,"login":"RohilJainUCSB","name":""},"headRefName":"rj-HelpRequest-create-db","number":54,"title":"Added HelpRequest db entity and repository","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/54"}]
