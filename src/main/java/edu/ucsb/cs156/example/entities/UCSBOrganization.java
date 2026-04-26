@@ -18,8 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity(name = "UCSBOrganization")
 public class UCSBOrganization {
-  @Id private String code;
-  private String orgCode;
+  @Id private String orgCode;
   private String orgTranslationShort;
   private String orgTranslation;
   private boolean inactive;
