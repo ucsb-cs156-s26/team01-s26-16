@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.example.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -120,6 +121,48 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     verify(recommendationRequestRepository, times(1)).findAll();
     String expectedJson = mapper.writeValueAsString(expectedRequests);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void an_admin_user_can_post_a_new_recommendation_request() throws Exception {
+    // arrange
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    LocalDateTime ldt2 = LocalDateTime.parse("2022-02-03T00:00:00");
+
+    RecommendationRequest recommendationRequest =
+        RecommendationRequest.builder()
+            .requesterEmail("student@example.com")
+            .professorEmail("professor@example.com")
+            .explanation("I need a letter of recommendation")
+            .dateRequested(ldt1)
+            .dateNeeded(ldt2)
+            .done(false)
+            .build();
+
+    when(recommendationRequestRepository.save(any(RecommendationRequest.class)))
+        .thenReturn(recommendationRequest);
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/api/recommendation_requests/post")
+                    .param("requesterEmail", "student@example.com")
+                    .param("professorEmail", "professor@example.com")
+                    .param("explanation", "I need a letter of recommendation")
+                    .param("dateRequested", "2022-01-03T00:00:00")
+                    .param("dateNeeded", "2022-02-03T00:00:00")
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(recommendationRequestRepository, times(1)).save(any(RecommendationRequest.class));
+    String expectedJson = mapper.writeValueAsString(recommendationRequest);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
   }
