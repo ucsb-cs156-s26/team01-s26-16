@@ -1,7 +1,7 @@
 package edu.ucsb.cs156.example.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -143,7 +143,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .done(false)
             .build();
 
-    when(recommendationRequestRepository.save(any(RecommendationRequest.class)))
+    when(recommendationRequestRepository.save(eq(recommendationRequest)))
         .thenReturn(recommendationRequest);
 
     // act
@@ -161,7 +161,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .andReturn();
 
     // assert
-    verify(recommendationRequestRepository, times(1)).save(any(RecommendationRequest.class));
+    verify(recommendationRequestRepository, times(1)).save(eq(recommendationRequest));
     String expectedJson = mapper.writeValueAsString(recommendationRequest);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
