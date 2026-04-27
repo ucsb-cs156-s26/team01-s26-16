@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s26/team01-s26-16
 owner: ucsb-cs156-s26
 repo_name: team01-s26-16
-pull_requests: [{"author":{"id":"U_kgDOCusDGg","is_bot":false,"login":"ikeacat2","name":"Ivy Holiday"},"headRefName":"issue_23","number":62,"title":"Issue #23: Add PUT (edit) endpoint for a single record in RecommendationRequest table","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/62"}]
+pull_requests: []
