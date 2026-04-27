@@ -26,7 +26,7 @@ public class RecommendationRequestController extends ApiController {
   @Autowired RecommendationRequestRepository recommendationRequestRepository;
 
   /**
-   * List all UCSB recomendation requests
+   * This method returns a list of all recommendation requests.
    *
    * @return an iterable of RecommendationRequest
    */
@@ -39,20 +39,20 @@ public class RecommendationRequestController extends ApiController {
   }
 
   /**
-   * Create a new recommendation request
+   * This method creates a new recommendation request. Accessible only to users with the role
+   * "ROLE_ADMIN".
    *
    * @param requesterEmail email of the person requesting a recommendation
    * @param professorEmail email of the professor that the request is going to
    * @param explanation explanation of the request
    * @param dateRequested date that they requested the recommendation
-   * @param dataNeeded date they need the reccomendation by
-   * @param done whether of not it has been completed
-   * @return the saved reccomendation request
+   * @param dateNeeded date they need the recommendation by
+   * @return the saved recommendation request
    */
   @Operation(summary = "Create a new recommendation request")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping("/post")
-  public RecommendationRequest postRecomendationRequest(
+  public RecommendationRequest postRecommendationRequest(
       @Parameter(name = "requesterEmail") @RequestParam String requesterEmail,
       @Parameter(name = "professorEmail") @RequestParam String professorEmail,
       @Parameter(name = "explanation") @RequestParam String explanation,
