@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.example.controllers;
 
 import edu.ucsb.cs156.example.entities.UCSBDiningCommonsMenuItem;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBDiningCommonsMenuItemRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,8 +33,22 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/all")
   public Iterable<UCSBDiningCommonsMenuItem> allMenuItems() {
-    Iterable<UCSBDiningCommonsMenuItem> menuItems = ucsbDiningCommonsMenuItemRepository.findAll();
-    return menuItems;
+    return ucsbDiningCommonsMenuItemRepository.findAll();
+  }
+
+  /**
+   * This method returns a single UCSBDiningCommonsMenuItem by id.
+   *
+   * @param id id of the menu item
+   * @return a single UCSBDiningCommonsMenuItem
+   */
+  @Operation(summary = "Get a single UCSB dining commons menu item")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("")
+  public UCSBDiningCommonsMenuItem getById(@Parameter(name = "id") @RequestParam Long id) {
+    return ucsbDiningCommonsMenuItemRepository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
   }
 
   /**
@@ -58,8 +73,6 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
     menuItem.setName(name);
     menuItem.setStation(station);
 
-    UCSBDiningCommonsMenuItem savedMenuItem = ucsbDiningCommonsMenuItemRepository.save(menuItem);
-
-    return savedMenuItem;
+    return ucsbDiningCommonsMenuItemRepository.save(menuItem);
   }
 }
