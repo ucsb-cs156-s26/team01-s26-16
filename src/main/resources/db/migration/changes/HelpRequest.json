@@ -35,19 +35,19 @@
                   },
                   {
                     "column": {
-                      "name": "requesterEmail",
+                      "name": "requester_email",
                       "type": "VARCHAR(255)"
                     }
                   },
                   {
                     "column": {
-                      "name": "teamId",
+                      "name": "team_id",
                       "type": "VARCHAR(255)"
                     }
                   },
                   {
                     "column": {
-                      "name": "tableOrBreakoutRoom",
+                      "name": "table_or_breakout_room",
                       "type": "VARCHAR(255)"
                     }
                   },
