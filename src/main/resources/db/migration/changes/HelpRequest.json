@@ -53,7 +53,7 @@
                   },
                   {
                     "column": {
-                      "name": "requestTime",
+                      "name": "request_time",
                       "type": "TIMESTAMP"
                     }
                   },
