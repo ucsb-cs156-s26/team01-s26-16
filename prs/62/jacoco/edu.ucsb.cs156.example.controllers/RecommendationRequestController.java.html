@@ -125,20 +125,20 @@ import org.springframework.web.bind.annotation.RestController;
       @Parameter(name = &quot;id&quot;) @RequestParam Long id,
       @RequestBody @Valid RecommendationRequest incoming) {
 
-<span class="nc" id="L128">    RecommendationRequest recommendationRequest =</span>
+<span class="fc" id="L128">    RecommendationRequest recommendationRequest =</span>
         recommendationRequestRepository
-<span class="nc" id="L130">            .findById(id)</span>
-<span class="nc" id="L131">            .orElseThrow(() -&gt; new EntityNotFoundException(RecommendationRequest.class, id));</span>
+<span class="fc" id="L130">            .findById(id)</span>
+<span class="fc" id="L131">            .orElseThrow(() -&gt; new EntityNotFoundException(RecommendationRequest.class, id));</span>
 
-<span class="nc" id="L133">    recommendationRequest.setRequesterEmail(incoming.getRequesterEmail());</span>
-<span class="nc" id="L134">    recommendationRequest.setProfessorEmail(incoming.getProfessorEmail());</span>
-<span class="nc" id="L135">    recommendationRequest.setExplanation(incoming.getExplanation());</span>
-<span class="nc" id="L136">    recommendationRequest.setDateRequested(incoming.getDateRequested());</span>
-<span class="nc" id="L137">    recommendationRequest.setDateNeeded(incoming.getDateNeeded());</span>
+<span class="fc" id="L133">    recommendationRequest.setRequesterEmail(incoming.getRequesterEmail());</span>
+<span class="fc" id="L134">    recommendationRequest.setProfessorEmail(incoming.getProfessorEmail());</span>
+<span class="fc" id="L135">    recommendationRequest.setExplanation(incoming.getExplanation());</span>
+<span class="fc" id="L136">    recommendationRequest.setDateRequested(incoming.getDateRequested());</span>
+<span class="fc" id="L137">    recommendationRequest.setDateNeeded(incoming.getDateNeeded());</span>
 
-<span class="nc" id="L139">    recommendationRequestRepository.save(recommendationRequest);</span>
+<span class="fc" id="L139">    recommendationRequestRepository.save(recommendationRequest);</span>
 
-<span class="nc" id="L141">    return recommendationRequest;</span>
+<span class="fc" id="L141">    return recommendationRequest;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
