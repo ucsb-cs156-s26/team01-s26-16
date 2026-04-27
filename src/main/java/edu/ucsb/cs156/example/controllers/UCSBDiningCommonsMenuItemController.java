@@ -6,11 +6,14 @@ import edu.ucsb.cs156.example.repositories.UCSBDiningCommonsMenuItemRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +27,6 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
 
   @Autowired UCSBDiningCommonsMenuItemRepository ucsbDiningCommonsMenuItemRepository;
 
-  /**
-   * This method returns a list of all UCSBDiningCommonsMenuItems.
-   *
-   * @return a list of all UCSBDiningCommonsMenuItems
-   */
   @Operation(summary = "List all UCSB dining commons menu items")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/all")
@@ -36,12 +34,6 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
     return ucsbDiningCommonsMenuItemRepository.findAll();
   }
 
-  /**
-   * This method returns a single UCSBDiningCommonsMenuItem by id.
-   *
-   * @param id id of the menu item
-   * @return a single UCSBDiningCommonsMenuItem
-   */
   @Operation(summary = "Get a single UCSB dining commons menu item")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("")
@@ -51,15 +43,6 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
         .orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
   }
 
-  /**
-   * This method creates a new UCSBDiningCommonsMenuItem. Accessible only to users with the role
-   * "ROLE_ADMIN".
-   *
-   * @param diningCommonsCode code of the dining commons
-   * @param name name of the menu item
-   * @param station station where the menu item is served
-   * @return the saved UCSBDiningCommonsMenuItem
-   */
   @Operation(summary = "Create a new UCSB dining commons menu item")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping("/post")
@@ -74,5 +57,26 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
     menuItem.setStation(station);
 
     return ucsbDiningCommonsMenuItemRepository.save(menuItem);
+  }
+
+  @Operation(summary = "Update a single UCSB dining commons menu item")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PutMapping("")
+  public UCSBDiningCommonsMenuItem updateMenuItem(
+      @Parameter(name = "id") @RequestParam Long id,
+      @RequestBody @Valid UCSBDiningCommonsMenuItem incoming) {
+
+    UCSBDiningCommonsMenuItem menuItem =
+        ucsbDiningCommonsMenuItemRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
+
+    menuItem.setDiningCommonsCode(incoming.getDiningCommonsCode());
+    menuItem.setName(incoming.getName());
+    menuItem.setStation(incoming.getStation());
+
+    ucsbDiningCommonsMenuItemRepository.save(menuItem);
+
+    return menuItem;
   }
 }

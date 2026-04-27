@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -72,6 +73,51 @@ public class UCSBDiningCommonsMenuItemControllerTests extends ControllerTestCase
                 .param("diningCommonsCode", "dlg")
                 .param("name", "Pizza")
                 .param("station", "Entrees")
+                .with(csrf()))
+        .andExpect(status().is(403));
+  }
+
+  @Test
+  public void logged_out_users_cannot_put() throws Exception {
+    UCSBDiningCommonsMenuItem menuItem =
+        UCSBDiningCommonsMenuItem.builder()
+            .diningCommonsCode("ortega")
+            .name("Salad")
+            .station("Salad Bar")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(menuItem);
+
+    mockMvc
+        .perform(
+            put("/api/UCSBDiningCommonsMenuItem")
+                .param("id", "7")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8")
+                .content(requestBody)
+                .with(csrf()))
+        .andExpect(status().is(403));
+  }
+
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void logged_in_regular_users_cannot_put() throws Exception {
+    UCSBDiningCommonsMenuItem menuItem =
+        UCSBDiningCommonsMenuItem.builder()
+            .diningCommonsCode("ortega")
+            .name("Salad")
+            .station("Salad Bar")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(menuItem);
+
+    mockMvc
+        .perform(
+            put("/api/UCSBDiningCommonsMenuItem")
+                .param("id", "7")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8")
+                .content(requestBody)
                 .with(csrf()))
         .andExpect(status().is(403));
   }
@@ -178,5 +224,76 @@ public class UCSBDiningCommonsMenuItemControllerTests extends ControllerTestCase
     String expectedJson = mapper.writeValueAsString(menuItem);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_an_existing_menu_item() throws Exception {
+    UCSBDiningCommonsMenuItem original =
+        UCSBDiningCommonsMenuItem.builder()
+            .diningCommonsCode("dlg")
+            .name("Pizza")
+            .station("Entrees")
+            .build();
+
+    UCSBDiningCommonsMenuItem edited =
+        UCSBDiningCommonsMenuItem.builder()
+            .diningCommonsCode("ortega")
+            .name("Salad")
+            .station("Salad Bar")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(edited);
+
+    when(ucsbDiningCommonsMenuItemRepository.findById(eq(7L))).thenReturn(Optional.of(original));
+
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/UCSBDiningCommonsMenuItem")
+                    .param("id", "7")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verify(ucsbDiningCommonsMenuItemRepository, times(1)).findById(eq(7L));
+    verify(ucsbDiningCommonsMenuItemRepository, times(1)).save(original);
+
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_menu_item_that_does_not_exist() throws Exception {
+    UCSBDiningCommonsMenuItem edited =
+        UCSBDiningCommonsMenuItem.builder()
+            .diningCommonsCode("ortega")
+            .name("Salad")
+            .station("Salad Bar")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(edited);
+
+    when(ucsbDiningCommonsMenuItemRepository.findById(eq(7L))).thenReturn(Optional.empty());
+
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/UCSBDiningCommonsMenuItem")
+                    .param("id", "7")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    verify(ucsbDiningCommonsMenuItemRepository, times(1)).findById(eq(7L));
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBDiningCommonsMenuItem with id 7 not found", json.get("message"));
   }
 }
