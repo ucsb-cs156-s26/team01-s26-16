@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s26/team01-s26-16
 owner: ucsb-cs156-s26
 repo_name: team01-s26-16
-pull_requests: []
+pull_requests: [{"author":{"id":"MDQ6VXNlcjY4Mjk4MzE1","is_bot":false,"login":"JackLiu8","name":""},"headRefName":"Jack-MenuItemsDelete","number":65,"title":"Add DELETE endpoint for UCSBDiningCommonsMenuItem","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/65"}]
