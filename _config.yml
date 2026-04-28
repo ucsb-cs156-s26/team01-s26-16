@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s26/team01-s26-16
 owner: ucsb-cs156-s26
 repo_name: team01-s26-16
-pull_requests: [{"author":{"id":"U_kgDOCusDGg","is_bot":false,"login":"ikeacat2","name":"Ivy Holiday"},"headRefName":"issue_24","number":66,"title":"Issue 24: Add DELETE endpoint for a specific record in RecommendationRequest table.","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/66"}]
+pull_requests: []
