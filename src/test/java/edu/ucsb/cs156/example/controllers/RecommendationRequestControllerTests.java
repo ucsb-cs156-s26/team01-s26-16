@@ -275,8 +275,6 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     when(recommendationRequestRepository.findById(eq(67L)))
         .thenReturn(Optional.of(recommendationRequestOrig));
-    when(recommendationRequestRepository.save(any(RecommendationRequest.class)))
-        .thenAnswer(invocation -> invocation.getArgument(0));
 
     // act
     MvcResult response =
