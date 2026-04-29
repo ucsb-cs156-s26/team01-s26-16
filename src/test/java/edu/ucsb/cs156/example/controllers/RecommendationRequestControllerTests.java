@@ -160,6 +160,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
                     .param("explanation", "I need a letter of recommendation")
                     .param("dateRequested", "2022-01-03T00:00:00")
                     .param("dateNeeded", "2022-02-03T00:00:00")
+                    .param("done", "false")
                     .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
