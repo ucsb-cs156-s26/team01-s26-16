@@ -275,6 +275,8 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     when(recommendationRequestRepository.findById(eq(67L)))
         .thenReturn(Optional.of(recommendationRequestOrig));
+    when(recommendationRequestRepository.save(any(RecommendationRequest.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     // act
     MvcResult response =
@@ -292,7 +294,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     // assert
     verify(recommendationRequestRepository, times(1)).findById(67L);
     verify(recommendationRequestRepository, times(1))
-        .save(eq(recommendationRequestEdited)); // should be saved with correct user
+        .save(recommendationRequestEdited); // should be saved with correct user
     String responseString = response.getResponse().getContentAsString();
     assertEquals(requestBody, responseString);
   }
