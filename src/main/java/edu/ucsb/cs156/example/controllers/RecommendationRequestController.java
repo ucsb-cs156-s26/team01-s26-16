@@ -74,7 +74,9 @@ public class RecommendationRequestController extends ApiController {
                   "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)")
           @RequestParam("dateNeeded")
           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          LocalDateTime dateNeeded)
+          LocalDateTime dateNeeded,
+      @Parameter(name = "done") @RequestParam(required = false, defaultValue = "false")
+          boolean done)
       throws JsonProcessingException {
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
@@ -87,6 +89,7 @@ public class RecommendationRequestController extends ApiController {
     recommendationRequest.setExplanation(explanation);
     recommendationRequest.setDateRequested(dateRequested);
     recommendationRequest.setDateNeeded(dateNeeded);
+    recommendationRequest.setDone(done);
 
     RecommendationRequest savedRecommendationRequest =
         recommendationRequestRepository.save(recommendationRequest);
@@ -136,6 +139,7 @@ public class RecommendationRequestController extends ApiController {
     recommendationRequest.setExplanation(incoming.getExplanation());
     recommendationRequest.setDateRequested(incoming.getDateRequested());
     recommendationRequest.setDateNeeded(incoming.getDateNeeded());
+    recommendationRequest.setDone(incoming.getDone());
 
     recommendationRequestRepository.save(recommendationRequest);
 
