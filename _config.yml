@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s26/team01-s26-16
 owner: ucsb-cs156-s26
 repo_name: team01-s26-16
-pull_requests: []
+pull_requests: [{"author":{"id":"U_kgDOCusDGg","is_bot":false,"login":"ikeacat2","name":"Ivy Holiday"},"headRefName":"fix_rec_request_done_field","number":72,"title":"Added Done Parameter to Resolve Gradescope Issues","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/72"},{"author":{"id":"U_kgDOCu1aKQ","is_bot":false,"login":"RohilJainUCSB","name":""},"headRefName":"rj-HelpRequest-put","number":71,"title":"RJ - HelpRequest - Added Put","url":"https://github.com/ucsb-cs156-s26/team01-s26-16/pull/71"}]
