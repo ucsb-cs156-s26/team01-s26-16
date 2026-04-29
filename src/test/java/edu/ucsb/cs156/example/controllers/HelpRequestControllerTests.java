@@ -353,4 +353,53 @@ public class HelpRequestControllerTests extends ControllerTestCase {
     Map<String, Object> json = responseToJson(response);
     assertEquals("HelpRequest with id 67 not found", json.get("message"));
   }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_delete_helprequest() throws Exception {
+    // arrange
+    HelpRequest helpRequest =
+        HelpRequest.builder()
+            .requesterEmail("test@test.edu")
+            .teamId("testTeam")
+            .tableOrBreakoutRoom("testTable")
+            .requestTime(LocalDateTime.parse("2022-01-03T00:00:00"))
+            .explanation("testExplanation")
+            .solved(true)
+            .build();
+
+    when(helpRequestRepository.findById(eq(67L))).thenReturn(Optional.of(helpRequest));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/helprequests?id=67").with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(helpRequestRepository, times(1)).findById(67L);
+    verify(helpRequestRepository, times(1)).delete(helpRequest);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("HelpRequest with id 67 deleted", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_delete_helprequest_that_does_not_exist() throws Exception {
+    // arrange
+    when(helpRequestRepository.findById(eq(67L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/helprequests?id=67").with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(helpRequestRepository, times(1)).findById(67L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("HelpRequest with id 67 not found", json.get("message"));
+  }
 }
