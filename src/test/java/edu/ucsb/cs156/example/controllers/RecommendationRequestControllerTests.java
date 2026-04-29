@@ -268,7 +268,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .explanation("My MS program requires a letter of recommendation")
             .dateRequested(ldt3)
             .dateNeeded(ldt4)
-            .done(false)
+            .done(true)
             .build();
 
     String requestBody = mapper.writeValueAsString(recommendationRequestEdited);
@@ -292,7 +292,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     // assert
     verify(recommendationRequestRepository, times(1)).findById(67L);
     verify(recommendationRequestRepository, times(1))
-        .save(recommendationRequestEdited); // should be saved with correct user
+        .save(eq(recommendationRequestEdited)); // should be saved with correct user
     String responseString = response.getResponse().getContentAsString();
     assertEquals(requestBody, responseString);
   }
@@ -334,6 +334,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     // assert
     verify(recommendationRequestRepository, times(1)).findById(67L);
+    verify(recommendationRequestRepository, times(0)).save(any()); // save should not be called
     Map<String, Object> json = responseToJson(response);
     assertEquals("RecommendationRequest with id 67 not found", json.get("message"));
   }
