@@ -144,7 +144,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             .explanation("I need a letter of recommendation")
             .dateRequested(ldt1)
             .dateNeeded(ldt2)
-            .done(false)
+            .done(true)
             .build();
 
     when(recommendationRequestRepository.save(eq(recommendationRequest)))
@@ -160,7 +160,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
                     .param("explanation", "I need a letter of recommendation")
                     .param("dateRequested", "2022-01-03T00:00:00")
                     .param("dateNeeded", "2022-02-03T00:00:00")
-                    .param("done", "false")
+                    .param("done", "true")
                     .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
@@ -253,6 +253,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     RecommendationRequest recommendationRequestOrig =
         RecommendationRequest.builder()
+            .id(67L)
             .requesterEmail("student@example.com")
             .professorEmail("professor@example.com")
             .explanation("I need a letter of recommendation")
@@ -263,6 +264,7 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     RecommendationRequest recommendationRequestEdited =
         RecommendationRequest.builder()
+            .id(67L)
             .requesterEmail("iholiday@ucsb.edu")
             .professorEmail("pconrad@ucsb.edu")
             .explanation("My MS program requires a letter of recommendation")
@@ -275,6 +277,8 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     when(recommendationRequestRepository.findById(eq(67L)))
         .thenReturn(Optional.of(recommendationRequestOrig));
+    when(recommendationRequestRepository.save(any(RecommendationRequest.class)))
+        .thenAnswer(i -> i.getArgument(0));
 
     // act
     MvcResult response =
